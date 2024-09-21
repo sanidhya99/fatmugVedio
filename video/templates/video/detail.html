@@ -2,14 +2,60 @@
 <html>
 <head>
     <title>{{ video.title }}</title>
+    <link href="https://vjs.zencdn.net/7.19.2/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/7.17.0/video.min.js" defer></script>  <!-- defer loading -->
 </head>
 <body>
     <h1>{{ video.title }}</h1>
-    <video controls>
-        <source src="{{ video.video_file.url }}" type="video/mp4">
+    
+    <video id="myVideo" class="video-js vjs-default-skin" controls muted autoplay>
+        <source src="http://127.0.0.1:9000/manya2.webm" type="video/mp4">
+        Your browser does not support the video tag.
     </video>
 
     <h2>Subtitles</h2>
     <pre>{{ video.subtitle_file }}</pre>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Convert timestamp (hh:mm:ss) to seconds
+            function convertToSec(hms) {
+                const [hours, mins, sec] = hms.split(':').map(Number);
+                return (hours * 3600) + (mins * 60) + sec;
+            }
+
+            // Play the video from the specific timestamp
+            function playVideo() {
+                const timestamp = "{{ timestamp }}";  // Get timestamp passed from server
+                console.log("Timestamp ->", timestamp);
+
+                const timeInSeconds = convertToSec(timestamp);
+                console.log("Time in seconds:", timeInSeconds);
+                
+                const video = document.getElementById("myVideo");
+
+                // Check if the video is loaded and metadata is available
+                video.addEventListener('loadedmetadata', function() {
+                    console.log("Video metadata loaded, setting current time to:", timeInSeconds);
+
+                    if (video.duration > timeInSeconds) {  // Check if the timestamp is within the video duration
+                        video.currentTime = timeInSeconds;  // Seek to the specific time
+                        video.play();  // Automatically play the video
+                        console.log("Playing video from:", timeInSeconds);
+                    } else {
+                        console.error("Timestamp exceeds video duration.");
+                    }
+                });
+
+                // Log errors if the video cannot play
+                video.addEventListener('error', function() {
+                    console.error("Error occurred while loading or playing the video.");
+                });
+            }
+
+            // Call the function after DOM is fully loaded
+            playVideo();
+        });
+    </script>
 </body>
 </html>

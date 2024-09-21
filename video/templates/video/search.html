@@ -13,7 +13,7 @@
     <ul>
         {% for result in results %}
             <li>
-                <a href="{% url 'video_detail' result.video.id %}">{{ result.video.title }}</a> 
+                <a href="{% url 'video_detail' result.video.id %}?timestamp={{ result.timestamp }}">{{ result.video.title }}</a> 
                 - {{ result.timestamp }}
             </li>
         {% endfor %}

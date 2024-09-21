@@ -139,3 +139,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Add static settings for frontend assets
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
